@@ -8,12 +8,14 @@ class Item
     private $name;
     private $qty;
     private $price;
+    private $discount;
     private $currency = 'Rp';
 
-    function __construct($name, $qty, $price) {
+    function __construct($name, $qty, $price, $discount) {
         $this->name = $name;
         $this->qty = $qty;
         $this->price = $price;
+        $this->discount = $discount;
         $this->paper_size = '57mm';
     }
 
@@ -33,26 +35,26 @@ class Item
         return $this->price;
     }
 
-    public function __toString()
+    public function getDiscount() {
+        return $this->discount;
+    }
+
+    public function formatForReceipt($itemNameColumnWidth)
     {
-        switch ($this->paper_size) {
-            case '80mm':
-                $right_cols = 15;
-                $left_cols = 32;
-                break;
-            default:
-                $right_cols = 10;
-                $left_cols = 22;
-                break;
+        $item_subtotal = number_format(($this->price - $this->discount) * $this->qty, 0, ',', '.') .' '.$this->currency;
+
+        $lines = explode("\n", wordwrap("{$this->qty}  {$this->name}", $itemNameColumnWidth));
+        $firstLine = array_shift($lines);
+        $formattedLines = [];
+
+        $firstLine = str_pad($firstLine, $itemNameColumnWidth);
+        $formattedLines[] = "$firstLine $item_subtotal";
+
+        foreach ($lines as $line) {
+            $line = str_pad('   '.$line, $itemNameColumnWidth);
+            $formattedLines[] = $line;
         }
 
-        $item_price = $this->currency . number_format($this->price, 0, ',', '.');
-        $item_subtotal = $this->currency . number_format($this->price * $this->qty, 0, ',', '.');
-        
-        $print_name = str_pad($this->name, 16) ;
-        $print_priceqty = str_pad($item_price . ' x ' . $this->qty, $left_cols);
-        $print_subtotal = str_pad($item_subtotal, $right_cols, ' ', STR_PAD_LEFT);
-
-        return "$print_name\n$print_priceqty$print_subtotal\n";
+        return implode("\n", $formattedLines);
     }
 }

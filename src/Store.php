@@ -7,15 +7,13 @@ class Store
     private $mid = '';
     private $name = '';
     private $address = '';
-    private $phone = '';
     private $email = '';
     private $website = '';
 
-    function __construct($mid, $name, $address, $phone, $email, $website) {
+    function __construct($mid, $name, $address, $email, $website) {
         $this->mid = $mid;
         $this->name = $name;
         $this->address = $address;
-        $this->phone = $phone;
         $this->email = $email;
         $this->website = $website;
     }
@@ -30,10 +28,6 @@ class Store
 
     public function getAddress() {
         return $this->address;
-    }
-
-    public function getPhone() {
-        return $this->phone;
     }
 
     public function getEmail() {

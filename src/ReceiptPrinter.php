@@ -203,12 +203,12 @@ class ReceiptPrinter
 
     public function printReceipt($with_items = true) {
         if ($this->printer) {
-            $subtotal = $this->getPrintableSummary('Sub Total:', $this->subtotal);
-            $discount = $this->getPrintableSummary('Discount:', $this->discount);
-            $tax = $this->getPrintableSummary('Tax', $this->tax);
-            $total = $this->getPrintableSummary('TOTAL', $this->total, true);
-            $header = str_pad('MID: ' . $this->store->getMID(), 16);
-            $footer = "Thank you for shopping!\n";
+            $subtotal = $this->getPrintableSummary('Sous-Total:', $this->subtotal);
+            $discount = $this->getPrintableSummary('Remise:', $this->discount);
+            $tax = $this->getPrintableSummary('Tax:', $this->tax);
+            $total = $this->getPrintableSummary('TOTAL:', $this->total, true);
+            $header = str_pad('N°: ' . $this->store->getMID(), 16);
+            $footer = "Merci pour votre visite\n";
             // Init printer settings
             $this->printer->initialize();
             $this->printer->selectPrintMode();
@@ -232,7 +232,7 @@ class ReceiptPrinter
             $this->printer->feed();
             // Print receipt title
             $this->printer->setEmphasis(true);
-            $this->printer->text("RECEIPT\n");
+            $this->printer->text("REÇU\n");
             $this->printer->setEmphasis(false);
             $this->printer->feed();
             // Print items

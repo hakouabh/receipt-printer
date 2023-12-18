@@ -221,7 +221,7 @@ class ReceiptPrinter
             // Print logo
             $this->printLogo($image_print_mode);
             $this->printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
-            $this->printer->feed(2);
+            $this->printer->feed();
             $this->printer->text("{$this->store->getName()}\n");
             $this->printer->selectPrintMode();
             $this->printer->text("{$this->store->getAddress()}\n");
@@ -247,8 +247,10 @@ class ReceiptPrinter
             $this->printer->setEmphasis(true);
             $this->printer->text($subtotal);
             $this->printer->setEmphasis(false);
-            $this->printer->feed();
-            $this->printer->text($discount);
+            if($this->discount){
+                $this->printer->feed();
+                $this->printer->text($discount);
+            }
             if($this->tax){
                 $this->printer->feed();
                 $this->printer->text($tax);

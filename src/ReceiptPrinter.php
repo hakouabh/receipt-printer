@@ -171,8 +171,6 @@ class ReceiptPrinter
         if ($this->printer && $image_path) {
             $image = EscposImage::load($image_path);
 
-            $this->printer->feed();
-
             switch ($mode) {
                 case 0:
                     $this->printer->graphics($image);
@@ -184,8 +182,6 @@ class ReceiptPrinter
                     $this->printer->bitImageColumnFormat($image);
                     break;
             }
-
-            $this->printer->feed();
         }
     }
 
@@ -217,7 +213,7 @@ class ReceiptPrinter
             // Print receipt headers
             $this->printer->setJustification(Printer::JUSTIFY_CENTER);
             // Image print mode
-            $image_print_mode = 0; // 0 = auto; 1 = mode 1; 2 = mode 2
+            $image_print_mode = 1; // 0 = auto; 1 = mode 1; 2 = mode 2
             // Print logo
             $this->printLogo($image_print_mode);
             $this->printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
@@ -275,22 +271,6 @@ class ReceiptPrinter
             $this->printer->cut();
             // Open drawer
             $this->openDrawer();
-            $this->printer->close();
-        } else {
-            throw new Exception('Printer has not been initialized.');
-        }
-    }
-    public function printReceiptV($with_items = true) {
-        if ($this->printer) {
-            if ($with_items) {
-                $this->printer->setJustification(Printer::JUSTIFY_LEFT);
-                foreach ($this->items as $item) {
-                    $formattedItem = $item->formatForReceipt(35);
-                    $this->printer->text("$formattedItem\n");
-                }
-                $this->printer->feed();
-            }
-            $this->printer->cut();
             $this->printer->close();
         } else {
             throw new Exception('Printer has not been initialized.');

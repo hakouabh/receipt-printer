@@ -20,6 +20,9 @@ class ReceiptPrinter
     private $items;
     private $phones;
     private $date;
+    private $store_website;
+    private $facebook;
+    private $instagram;
     private $currency = 'da';
     private $subtotal = 0;
     private $total = 0;
@@ -72,6 +75,18 @@ class ReceiptPrinter
 
     public function setLogo($logo) {
         $this->logo = $logo;
+    }
+
+    public function setWebSite($store_website) {
+        $this->store_website = $store_website;
+    }
+    
+    public function setFaceBook($facebook) {
+        $this->facebook = $facebook;
+    }
+
+    public function setInstagram($instagram) {
+        $this->instagram = $instagram;
     }
 
     public function setCurrency($currency) {
@@ -255,12 +270,24 @@ class ReceiptPrinter
             // Print grand total
             $this->printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
             $this->printer->text($total);
-            $this->printer->feed();
+            $this->printer->feed(2);
             $this->printer->selectPrintMode();
-            // Print qr code
-            $this->printQRcode();
-            // Print receipt footer
+            $this->printer->setEmphasis(true);
+            $this->printer->text("site Web: $this->store_website");
             $this->printer->feed();
+            if($this->facebook){
+                $this->printer->text("facebook: $this->facebook");
+                $this->printer->feed();
+            }
+            if($this->instagram){
+                $this->printer->text("instagram: $this->instagram");
+                $this->printer->feed();
+            }
+            $this->printer->setEmphasis(false);
+            // Print qr code
+            // $this->printQRcode();
+            // Print receipt footer
+            $this->printer->feed(2);
             $this->printer->setJustification(Printer::JUSTIFY_CENTER);
             $this->printer->text($footer);
             $this->printer->feed();
